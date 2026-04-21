@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chess Game</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Chessboard CSS -->
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
+
+  <style>
+    body {
+      text-align: center;
+      background: #1e1e1e;
+      color: white;
+      font-family: Arial;
+    }
+
+    #board {
+      width: 90vw;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>♟️ Chess Game</h2>
+<div id="board"></div>
+
+<!-- LOAD JS IN CORRECT ORDER -->
+<script src="https://cdn.jsdelivr.net/npm/chess.js@0.13.4/chess.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
+
+<script>
+  window.onload = function () {
+
+    const game = new Chess();
+
+    const board = Chessboard('board', {
+      draggable: true,
+      position: 'start',
+
+      onDragStart: function (source, piece) {
+        if (game.game_over()) return false;
+
+        if (
+          (game.turn() === 'w' && piece.startsWith('b')) ||
+          (game.turn() === 'b' && piece.startsWith('w'))
+        ) {
+          return false;
+        }
+      },
+
+      onDrop: function (source, target) {
+        const move = game.move({
+          from: source,
+          to: target,
+          promotion: 'q'
+        });
+
+        if (move === null) return 'snapback';
+      },
+
+      onSnapEnd: function () {
+        board.position(game.fen());
+      }
+    });
+
+  };
+</script>
+
+</body>
+</html>
